@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as DogsRouteImport } from './routes/dogs'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AddDogRouteImport } from './routes/add-dog'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -22,6 +29,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
 const DogsRoute = DogsRouteImport.update({
   id: '/dogs',
   path: '/dogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AddDogRoute = AddDogRouteImport.update({
@@ -38,39 +50,67 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add-dog': typeof AddDogRoute
+  '/auth': typeof AuthRoute
   '/dogs': typeof DogsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-dog': typeof AddDogRoute
+  '/auth': typeof AuthRoute
   '/dogs': typeof DogsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/add-dog': typeof AddDogRoute
+  '/auth': typeof AuthRoute
   '/dogs': typeof DogsRoute
   '/resources': typeof ResourcesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/add-dog' | '/dogs' | '/resources'
+  fullPaths:
+    | '/'
+    | '/add-dog'
+    | '/auth'
+    | '/dogs'
+    | '/resources'
+    | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/add-dog' | '/dogs' | '/resources'
-  id: '__root__' | '/' | '/add-dog' | '/dogs' | '/resources'
+  to: '/' | '/add-dog' | '/auth' | '/dogs' | '/resources' | '/sitemap.xml'
+  id:
+    | '__root__'
+    | '/'
+    | '/add-dog'
+    | '/auth'
+    | '/dogs'
+    | '/resources'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddDogRoute: typeof AddDogRoute
+  AuthRoute: typeof AuthRoute
   DogsRoute: typeof DogsRoute
   ResourcesRoute: typeof ResourcesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resources': {
       id: '/resources'
       path: '/resources'
@@ -83,6 +123,13 @@ declare module '@tanstack/react-router' {
       path: '/dogs'
       fullPath: '/dogs'
       preLoaderRoute: typeof DogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/add-dog': {
@@ -105,8 +152,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddDogRoute: AddDogRoute,
+  AuthRoute: AuthRoute,
   DogsRoute: DogsRoute,
   ResourcesRoute: ResourcesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
